@@ -3,21 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#fff5f2">
+  <meta name="theme-color" content="#fff6ee">
   <title>i miss you</title>
   <style>
     :root {
       color-scheme: light;
-      --ink: #402f35;
-      --muted: #80646d;
-      --cream: #fff9f4;
-      --peach: #ffd8c9;
-      --rose: #e85d75;
-      --blue: #83b8d9;
-      --green: #99c9a6;
-      --shadow: 0 18px 45px rgba(86, 52, 59, 0.18);
-      --safe-top: max(22px, env(safe-area-inset-top));
-      --safe-bottom: max(26px, env(safe-area-inset-bottom));
+      --ink: #3d3030;
+      --muted: #806565;
+      --cream: #fff8ef;
+      --rose: #f45d7f;
+      --coral: #ff8a72;
+      --sun: #f5bd4f;
+      --mint: #80c7a3;
+      --sky: #7fb8e6;
+      --lav: #b58ae6;
+      --shadow: 0 18px 42px rgba(81, 47, 54, 0.2);
+      --safe-top: max(20px, env(safe-area-inset-top));
+      --safe-bottom: max(22px, env(safe-area-inset-bottom));
     }
 
     * {
@@ -28,7 +30,7 @@
     html,
     body {
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       margin: 0;
     }
 
@@ -37,9 +39,10 @@
       color: var(--ink);
       font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", Avenir, system-ui, sans-serif;
       background:
-        radial-gradient(circle at 18% 18%, rgba(255, 216, 201, 0.8), transparent 30%),
-        radial-gradient(circle at 86% 20%, rgba(131, 184, 217, 0.42), transparent 26%),
-        linear-gradient(150deg, #fffaf5 0%, #fff0f2 50%, #f8fbf7 100%);
+        radial-gradient(circle at 15% 16%, rgba(255, 138, 114, 0.32), transparent 28%),
+        radial-gradient(circle at 85% 19%, rgba(127, 184, 230, 0.34), transparent 27%),
+        radial-gradient(circle at 50% 90%, rgba(128, 199, 163, 0.24), transparent 31%),
+        linear-gradient(145deg, #fff9f2 0%, #fff0f4 48%, #f5fbff 100%);
       touch-action: none;
       user-select: none;
       -webkit-user-select: none;
@@ -48,63 +51,130 @@
     .scene {
       position: relative;
       width: 100vw;
+      height: 100vh;
       height: 100svh;
-      min-height: 520px;
+      height: 100dvh;
+      min-height: 480px;
       overflow: hidden;
-      padding: var(--safe-top) 22px var(--safe-bottom);
       isolation: isolate;
     }
 
-    .halo {
+    .skyline {
       position: absolute;
-      inset: 14% 9% auto;
-      height: 44%;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.5);
-      filter: blur(18px);
-      transform: rotate(-10deg);
+      inset: var(--safe-top) 18px var(--safe-bottom);
+      border: 1px solid rgba(61, 48, 48, 0.06);
+      border-radius: 30px;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.18)),
+        repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.24) 0 2px, transparent 2px 18px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+      z-index: -2;
+    }
+
+    .orbital {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(82vw, 460px);
+      aspect-ratio: 1;
+      border: 1px dashed rgba(61, 48, 48, 0.12);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg);
       z-index: -1;
+      animation: drift 18s linear infinite;
+    }
+
+    .orbital::before,
+    .orbital::after {
+      content: "";
+      position: absolute;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 0 7px rgba(255, 138, 114, 0.16);
+    }
+
+    .orbital::before {
+      left: 18%;
+      top: 8%;
+    }
+
+    .orbital::after {
+      right: 10%;
+      bottom: 20%;
+      background: var(--sky);
+      box-shadow: 0 0 0 7px rgba(127, 184, 230, 0.16);
+    }
+
+    .hint {
+      position: absolute;
+      left: 50%;
+      top: calc(var(--safe-top) + 22px);
+      width: min(86vw, 430px);
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 4.1vw, 1.2rem);
+      font-weight: 720;
+      letter-spacing: 0;
+      line-height: 1.25;
+      text-align: center;
+      opacity: 0.88;
+      transform: translateX(-50%);
+      transition: opacity 240ms ease, transform 240ms ease;
+      pointer-events: none;
+    }
+
+    .hint.bump {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px) scale(1.04);
     }
 
     .piece {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      min-width: 72px;
+      left: 0;
+      top: 0;
+      min-width: 74px;
       min-height: 58px;
       padding: 13px 20px 15px;
-      border: 1px solid rgba(64, 47, 53, 0.08);
-      border-radius: 18px;
+      border: 1px solid rgba(61, 48, 48, 0.08);
+      border-radius: 20px;
       color: var(--ink);
-      font-size: clamp(2.2rem, 12vw, 4.2rem);
-      font-weight: 760;
+      font-size: clamp(2.15rem, 11vw, 4.25rem);
+      font-weight: 820;
       line-height: 1;
       letter-spacing: 0;
       text-align: center;
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.76);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(15px);
+      backdrop-filter: blur(16px);
       cursor: pointer;
-      transform: translate3d(-50%, -50%, 0);
-      transition:
-        transform 420ms cubic-bezier(.2, .9, .25, 1.12),
-        background-color 220ms ease,
-        box-shadow 220ms ease,
-        opacity 300ms ease;
+      transform: translate3d(-999px, -999px, 0);
       will-change: transform;
+      z-index: 2;
     }
 
-    .piece:nth-of-type(2) {
-      background: rgba(255, 244, 235, 0.82);
+    .scene.ready .piece {
+      transition:
+        transform 430ms cubic-bezier(.17, .9, .25, 1.18),
+        background-color 180ms ease,
+        box-shadow 180ms ease,
+        opacity 260ms ease,
+        filter 260ms ease;
     }
 
-    .piece:nth-of-type(3) {
-      background: rgba(248, 255, 249, 0.82);
+    .piece[data-word="miss"] {
+      background: rgba(255, 246, 221, 0.84);
+    }
+
+    .piece[data-word="you"] {
+      background: rgba(235, 249, 255, 0.82);
     }
 
     .piece:active {
       background: rgba(255, 255, 255, 0.96);
-      box-shadow: 0 10px 28px rgba(86, 52, 59, 0.14);
+      box-shadow: 0 10px 25px rgba(81, 47, 54, 0.16);
+      filter: saturate(1.08);
     }
 
     .piece.caught {
@@ -118,8 +188,9 @@
       place-items: center;
       opacity: 0;
       pointer-events: none;
-      transform: translateY(12px) scale(0.98);
-      transition: opacity 650ms ease, transform 650ms cubic-bezier(.2, .85, .2, 1);
+      transform: translateY(14px) scale(0.96);
+      transition: opacity 620ms ease, transform 620ms cubic-bezier(.16, .86, .22, 1.08);
+      z-index: 3;
     }
 
     .final.is-visible {
@@ -128,36 +199,54 @@
     }
 
     .final-copy {
-      width: min(520px, 100%);
+      width: min(560px, 100%);
       text-align: center;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(3.4rem, 18vw, 7.2rem);
+      font-size: clamp(3.4rem, 17vw, 7.6rem);
       line-height: 0.92;
       letter-spacing: 0;
+      text-wrap: balance;
+      text-shadow: 0 10px 28px rgba(88, 52, 59, 0.12);
     }
 
     .note {
       margin: 18px auto 0;
-      max-width: 18rem;
+      max-width: 19rem;
       color: var(--muted);
-      font-size: clamp(1rem, 4.6vw, 1.35rem);
+      font-size: clamp(1rem, 4.4vw, 1.28rem);
+      font-weight: 650;
       line-height: 1.35;
     }
 
+    .pop,
     .heart {
       position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .pop {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--color, var(--rose));
+      animation: pop 650ms ease-out forwards;
+    }
+
+    .heart {
       left: 50%;
       bottom: 18%;
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       color: var(--rose);
       opacity: 0;
       transform: translate(-50%, 0) rotate(45deg) scale(0.8);
-      animation: float-heart 1800ms ease-out forwards;
-      pointer-events: none;
+      animation: float-heart 1900ms ease-out forwards;
+      background: currentColor;
+      z-index: 4;
     }
 
     .heart::before,
@@ -178,21 +267,53 @@
       top: -50%;
     }
 
-    .heart {
-      background: currentColor;
+    .scene.flash::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.6);
+      animation: flash 720ms ease-out forwards;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes drift {
+      to {
+        transform: translate(-50%, -50%) rotate(348deg);
+      }
+    }
+
+    @keyframes pop {
+      0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(0.45);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1.2);
+      }
     }
 
     @keyframes float-heart {
       0% {
         opacity: 0;
-        transform: translate(-50%, 0) rotate(45deg) scale(0.6);
+        transform: translate(-50%, 0) rotate(45deg) scale(0.55);
       }
       18% {
-        opacity: 0.9;
+        opacity: 0.92;
       }
       100% {
         opacity: 0;
-        transform: translate(calc(-50% + var(--drift, 0px)), -190px) rotate(45deg) scale(1.15);
+        transform: translate(calc(-50% + var(--drift, 0px)), -210px) rotate(45deg) scale(1.18);
+      }
+    }
+
+    @keyframes flash {
+      0% {
+        opacity: 0.8;
+      }
+      100% {
+        opacity: 0;
       }
     }
 
@@ -204,29 +325,40 @@
       .piece {
         min-width: 92px;
         min-height: 70px;
-        padding-inline: 25px;
-        border-radius: 20px;
+        padding-inline: 26px;
+        border-radius: 22px;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .piece,
-      .final {
-        transition-duration: 80ms;
+      .orbital {
+        animation: none;
       }
 
-      .heart {
-        animation-duration: 700ms;
+      .piece,
+      .final,
+      .hint {
+        transition-duration: 90ms;
+      }
+
+      .pop,
+      .heart,
+      .scene.flash::after {
+        animation-duration: 500ms;
       }
     }
   </style>
 </head>
 <body>
   <main class="scene" aria-label="A little message">
-    <div class="halo" aria-hidden="true"></div>
+    <div class="skyline" aria-hidden="true"></div>
+    <div class="orbital" aria-hidden="true"></div>
+    <p class="hint" aria-live="polite">try to catch it</p>
+
     <button class="piece" type="button" data-word="i" aria-label="i">i</button>
     <button class="piece" type="button" data-word="miss" aria-label="miss">miss</button>
     <button class="piece" type="button" data-word="you" aria-label="you">you</button>
+
     <section class="final" aria-live="polite" aria-hidden="true">
       <div class="final-copy">
         <h1>i miss you</h1>
@@ -238,44 +370,64 @@
   <script>
     (() => {
       const scene = document.querySelector(".scene");
+      const hint = document.querySelector(".hint");
       const pieces = [...document.querySelectorAll(".piece")];
       const final = document.querySelector(".final");
-      const maxEscapes = 7;
+      const maxEscapes = 8;
+      const palette = ["#f45d7f", "#ff8a72", "#f5bd4f", "#80c7a3", "#7fb8e6", "#b58ae6"];
+      const hintCopy = ["try to catch it", "hey", "too slow", "almost", "nope", "okay okay", "one more", "fine"];
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
       let attempts = 0;
       let finished = false;
-
-      const palette = ["#e85d75", "#83b8d9", "#99c9a6", "#f0a44f", "#c47ac0"];
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let positions = new Map();
 
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
+      function numericCssVar(name, fallback) {
+        const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        const parsed = parseFloat(value);
+        return Number.isFinite(parsed) ? parsed : fallback;
+      }
+
       function boundsFor(piece) {
-        const sceneRect = scene.getBoundingClientRect();
-        const pieceRect = piece.getBoundingClientRect();
-        const margin = 18;
-        const topSafe = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--safe-top")) || 22;
-        const bottomSafe = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--safe-bottom")) || 26;
+        const rect = piece.getBoundingClientRect();
+        const margin = scene.clientWidth < 480 ? 14 : 24;
+        const topSafe = numericCssVar("--safe-top", 20);
+        const bottomSafe = numericCssVar("--safe-bottom", 22);
+        const hintSpace = Math.min(86, Math.max(58, scene.clientHeight * 0.1));
 
         return {
-          minX: margin + pieceRect.width / 2,
-          maxX: sceneRect.width - margin - pieceRect.width / 2,
-          minY: topSafe + margin + pieceRect.height / 2,
-          maxY: sceneRect.height - bottomSafe - margin - pieceRect.height / 2
+          minX: margin + rect.width / 2,
+          maxX: scene.clientWidth - margin - rect.width / 2,
+          minY: topSafe + hintSpace + rect.height / 2,
+          maxY: scene.clientHeight - bottomSafe - margin - rect.height / 2
         };
       }
 
-      function setPosition(piece, x, y, rotate = 0) {
-        piece.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) rotate(${rotate}deg)`;
+      function safePoint(piece, x, y) {
+        const b = boundsFor(piece);
+        return {
+          x: clamp(x, b.minX, Math.max(b.minX, b.maxX)),
+          y: clamp(y, b.minY, Math.max(b.minY, b.maxY))
+        };
+      }
+
+      function setPosition(piece, x, y, rotate = 0, scale = 1) {
+        const point = safePoint(piece, x, y);
+        positions.set(piece, { x: point.x, y: point.y, rotate, scale });
+        piece.style.transform = `translate3d(${point.x}px, ${point.y}px, 0) translate(-50%, -50%) rotate(${rotate}deg) scale(${scale})`;
       }
 
       function scatterInitial() {
+        if (finished) return;
+
         const w = scene.clientWidth;
         const h = scene.clientHeight;
-        const starts = [
-          [w * 0.33, h * 0.35, -7],
-          [w * 0.57, h * 0.49, 5],
-          [w * 0.42, h * 0.66, -3]
-        ];
+        const compact = w < 430;
+        const starts = compact
+          ? [[w * 0.27, h * 0.35, -9], [w * 0.58, h * 0.5, 5], [w * 0.38, h * 0.66, -4]]
+          : [[w * 0.34, h * 0.34, -8], [w * 0.57, h * 0.5, 4], [w * 0.43, h * 0.66, -5]];
 
         pieces.forEach((piece, index) => {
           const [x, y, rotate] = starts[index];
@@ -283,58 +435,97 @@
         });
       }
 
-      function moveAway(piece, pointerX, pointerY) {
-        const b = boundsFor(piece);
-        const current = piece.getBoundingClientRect();
-        const centerX = current.left + current.width / 2;
-        const centerY = current.top + current.height / 2;
-        const angleFromPointer = Math.atan2(centerY - pointerY, centerX - pointerX);
-        const distance = Math.min(scene.clientWidth, scene.clientHeight) * (reducedMotion ? 0.22 : 0.34);
-        const wiggle = (Math.random() - 0.5) * 1.4;
-        const angle = angleFromPointer + wiggle;
-
-        const nextX = clamp(centerX + Math.cos(angle) * distance, b.minX, b.maxX);
-        const nextY = clamp(centerY + Math.sin(angle) * distance, b.minY, b.maxY);
-        const rotate = clamp((Math.random() - 0.5) * 18, -10, 10);
-
-        setPosition(piece, nextX, nextY, rotate);
+      function updateHint(text) {
+        hint.textContent = text;
+        hint.classList.add("bump");
+        window.setTimeout(() => hint.classList.remove("bump"), 180);
       }
 
-      function finish() {
+      function particles(x, y, count = 8) {
+        if (reducedMotion) return;
+
+        for (let i = 0; i < count; i += 1) {
+          const pop = document.createElement("span");
+          const angle = (Math.PI * 2 * i) / count + Math.random() * 0.35;
+          const distance = 26 + Math.random() * 32;
+          pop.className = "pop";
+          pop.style.left = `${x}px`;
+          pop.style.top = `${y}px`;
+          pop.style.setProperty("--x", `${Math.cos(angle) * distance}px`);
+          pop.style.setProperty("--y", `${Math.sin(angle) * distance}px`);
+          pop.style.setProperty("--color", palette[i % palette.length]);
+          scene.appendChild(pop);
+          pop.addEventListener("animationend", () => pop.remove(), { once: true });
+        }
+      }
+
+      function dodge(piece, pointerX, pointerY) {
+        const current = positions.get(piece) || {
+          x: piece.getBoundingClientRect().left + piece.offsetWidth / 2,
+          y: piece.getBoundingClientRect().top + piece.offsetHeight / 2
+        };
+        const away = Math.atan2(current.y - pointerY, current.x - pointerX);
+        const wiggle = (Math.random() - 0.5) * 1.55;
+        const distance = Math.min(scene.clientWidth, scene.clientHeight) * (reducedMotion ? 0.2 : 0.31);
+        let nextX = current.x + Math.cos(away + wiggle) * distance;
+        let nextY = current.y + Math.sin(away + wiggle) * distance;
+
+        if (Math.hypot(nextX - current.x, nextY - current.y) < 32) {
+          nextX = scene.clientWidth * (0.22 + Math.random() * 0.56);
+          nextY = scene.clientHeight * (0.28 + Math.random() * 0.48);
+        }
+
+        const rotate = clamp((Math.random() - 0.5) * 22, -12, 12);
+        setPosition(piece, nextX, nextY, rotate, 1 + Math.random() * 0.04);
+      }
+
+      function gatherThenReveal() {
         if (finished) return;
         finished = true;
+        updateHint("caught");
+
+        const centerX = scene.clientWidth / 2;
+        const centerY = scene.clientHeight / 2;
+        const finalSpots = [
+          [centerX - Math.min(128, scene.clientWidth * 0.26), centerY - 48, -6],
+          [centerX, centerY, 2],
+          [centerX + Math.min(126, scene.clientWidth * 0.25), centerY + 52, 7]
+        ];
 
         pieces.forEach((piece, index) => {
           piece.classList.add("caught");
-          piece.style.opacity = "0";
-          setTimeout(() => {
-            piece.hidden = true;
-          }, 300);
+          const [x, y, rotate] = finalSpots[index];
+          setPosition(piece, x, y, rotate, 1.04);
         });
 
-        final.setAttribute("aria-hidden", "false");
-        requestAnimationFrame(() => {
+        window.setTimeout(() => {
+          pieces.forEach((piece) => {
+            piece.style.opacity = "0";
+            piece.style.filter = "blur(6px)";
+          });
+          hint.style.opacity = "0";
+          scene.classList.add("flash");
+          final.setAttribute("aria-hidden", "false");
           final.classList.add("is-visible");
-        });
-
-        burstHearts();
-        setTimeout(burstHearts, 450);
+          burstHearts();
+          window.setTimeout(burstHearts, 360);
+        }, reducedMotion ? 180 : 580);
       }
 
       function burstHearts() {
-        const count = reducedMotion ? 8 : 18;
+        const count = reducedMotion ? 9 : 24;
 
         for (let i = 0; i < count; i += 1) {
           const heart = document.createElement("span");
-          const size = 9 + Math.random() * 13;
+          const size = 8 + Math.random() * 15;
           heart.className = "heart";
           heart.style.width = `${size}px`;
           heart.style.height = `${size}px`;
-          heart.style.left = `${28 + Math.random() * 44}%`;
-          heart.style.bottom = `${12 + Math.random() * 19}%`;
+          heart.style.left = `${22 + Math.random() * 56}%`;
+          heart.style.bottom = `${10 + Math.random() * 25}%`;
           heart.style.color = palette[i % palette.length];
-          heart.style.setProperty("--drift", `${(Math.random() - 0.5) * 120}px`);
-          heart.style.animationDelay = `${Math.random() * 240}ms`;
+          heart.style.setProperty("--drift", `${(Math.random() - 0.5) * 150}px`);
+          heart.style.animationDelay = `${Math.random() * 280}ms`;
           scene.appendChild(heart);
           heart.addEventListener("animationend", () => heart.remove(), { once: true });
         }
@@ -343,27 +534,38 @@
       pieces.forEach((piece) => {
         piece.addEventListener("pointerdown", (event) => {
           event.preventDefault();
-
           if (finished) return;
+
           attempts += 1;
+          particles(event.clientX, event.clientY, 7 + Math.min(attempts, 5));
+          updateHint(hintCopy[Math.min(attempts, hintCopy.length - 1)]);
 
           if (attempts >= maxEscapes) {
-            finish();
+            gatherThenReveal();
             return;
           }
 
-          moveAway(piece, event.clientX, event.clientY);
+          dodge(piece, event.clientX, event.clientY);
 
-          if (attempts > 2 && attempts % 2 === 0) {
-            const otherPieces = pieces.filter((item) => item !== piece);
-            const other = otherPieces[Math.floor(Math.random() * otherPieces.length)];
-            moveAway(other, event.clientX, event.clientY);
+          if (attempts >= 3) {
+            const others = pieces.filter((item) => item !== piece);
+            const extra = others[Math.floor(Math.random() * others.length)];
+            window.setTimeout(() => dodge(extra, event.clientX, event.clientY), 80);
           }
         });
       });
 
-      window.addEventListener("resize", scatterInitial);
-      scatterInitial();
+      window.addEventListener("resize", () => {
+        window.requestAnimationFrame(scatterInitial);
+      });
+      window.addEventListener("orientationchange", () => {
+        window.setTimeout(scatterInitial, 180);
+      });
+
+      window.requestAnimationFrame(() => {
+        scatterInitial();
+        window.requestAnimationFrame(() => scene.classList.add("ready"));
+      });
     })();
   </script>
 </body>
