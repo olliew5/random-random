@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff5f2">
+  <title>i miss you</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #402f35;
+      --muted: #80646d;
+      --cream: #fff9f4;
+      --peach: #ffd8c9;
+      --rose: #e85d75;
+      --blue: #83b8d9;
+      --green: #99c9a6;
+      --shadow: 0 18px 45px rgba(86, 52, 59, 0.18);
+      --safe-top: max(22px, env(safe-area-inset-top));
+      --safe-bottom: max(26px, env(safe-area-inset-bottom));
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      color: var(--ink);
+      font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", Avenir, system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 216, 201, 0.8), transparent 30%),
+        radial-gradient(circle at 86% 20%, rgba(131, 184, 217, 0.42), transparent 26%),
+        linear-gradient(150deg, #fffaf5 0%, #fff0f2 50%, #f8fbf7 100%);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100svh;
+      min-height: 520px;
+      overflow: hidden;
+      padding: var(--safe-top) 22px var(--safe-bottom);
+      isolation: isolate;
+    }
+
+    .halo {
+      position: absolute;
+      inset: 14% 9% auto;
+      height: 44%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.5);
+      filter: blur(18px);
+      transform: rotate(-10deg);
+      z-index: -1;
+    }
+
+    .piece {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      min-width: 72px;
+      min-height: 58px;
+      padding: 13px 20px 15px;
+      border: 1px solid rgba(64, 47, 53, 0.08);
+      border-radius: 18px;
+      color: var(--ink);
+      font-size: clamp(2.2rem, 12vw, 4.2rem);
+      font-weight: 760;
+      line-height: 1;
+      letter-spacing: 0;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(15px);
+      cursor: pointer;
+      transform: translate3d(-50%, -50%, 0);
+      transition:
+        transform 420ms cubic-bezier(.2, .9, .25, 1.12),
+        background-color 220ms ease,
+        box-shadow 220ms ease,
+        opacity 300ms ease;
+      will-change: transform;
+    }
+
+    .piece:nth-of-type(2) {
+      background: rgba(255, 244, 235, 0.82);
+    }
+
+    .piece:nth-of-type(3) {
+      background: rgba(248, 255, 249, 0.82);
+    }
+
+    .piece:active {
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 10px 28px rgba(86, 52, 59, 0.14);
+    }
+
+    .piece.caught {
+      pointer-events: none;
+    }
+
+    .final {
+      position: absolute;
+      inset: var(--safe-top) 18px var(--safe-bottom);
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 650ms ease, transform 650ms cubic-bezier(.2, .85, .2, 1);
+    }
+
+    .final.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .final-copy {
+      width: min(520px, 100%);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3.4rem, 18vw, 7.2rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .note {
+      margin: 18px auto 0;
+      max-width: 18rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 4.6vw, 1.35rem);
+      line-height: 1.35;
+    }
+
+    .heart {
+      position: absolute;
+      left: 50%;
+      bottom: 18%;
+      width: 14px;
+      height: 14px;
+      color: var(--rose);
+      opacity: 0;
+      transform: translate(-50%, 0) rotate(45deg) scale(0.8);
+      animation: float-heart 1800ms ease-out forwards;
+      pointer-events: none;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .heart::before {
+      left: -50%;
+    }
+
+    .heart::after {
+      top: -50%;
+    }
+
+    .heart {
+      background: currentColor;
+    }
+
+    @keyframes float-heart {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 0) rotate(45deg) scale(0.6);
+      }
+      18% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--drift, 0px)), -190px) rotate(45deg) scale(1.15);
+      }
+    }
+
+    @media (min-width: 720px) {
+      .scene {
+        min-height: 620px;
+      }
+
+      .piece {
+        min-width: 92px;
+        min-height: 70px;
+        padding-inline: 25px;
+        border-radius: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .piece,
+      .final {
+        transition-duration: 80ms;
+      }
+
+      .heart {
+        animation-duration: 700ms;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene" aria-label="A little message">
+    <div class="halo" aria-hidden="true"></div>
+    <button class="piece" type="button" data-word="i" aria-label="i">i</button>
+    <button class="piece" type="button" data-word="miss" aria-label="miss">miss</button>
+    <button class="piece" type="button" data-word="you" aria-label="you">you</button>
+    <section class="final" aria-live="polite" aria-hidden="true">
+      <div class="final-copy">
+        <h1>i miss you</h1>
+        <p class="note">wish you were here, preferably immediately</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const scene = document.querySelector(".scene");
+      const pieces = [...document.querySelectorAll(".piece")];
+      const final = document.querySelector(".final");
+      const maxEscapes = 7;
+      let attempts = 0;
+      let finished = false;
+
+      const palette = ["#e85d75", "#83b8d9", "#99c9a6", "#f0a44f", "#c47ac0"];
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+      function boundsFor(piece) {
+        const sceneRect = scene.getBoundingClientRect();
+        const pieceRect = piece.getBoundingClientRect();
+        const margin = 18;
+        const topSafe = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--safe-top")) || 22;
+        const bottomSafe = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--safe-bottom")) || 26;
+
+        return {
+          minX: margin + pieceRect.width / 2,
+          maxX: sceneRect.width - margin - pieceRect.width / 2,
+          minY: topSafe + margin + pieceRect.height / 2,
+          maxY: sceneRect.height - bottomSafe - margin - pieceRect.height / 2
+        };
+      }
+
+      function setPosition(piece, x, y, rotate = 0) {
+        piece.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) rotate(${rotate}deg)`;
+      }
+
+      function scatterInitial() {
+        const w = scene.clientWidth;
+        const h = scene.clientHeight;
+        const starts = [
+          [w * 0.33, h * 0.35, -7],
+          [w * 0.57, h * 0.49, 5],
+          [w * 0.42, h * 0.66, -3]
+        ];
+
+        pieces.forEach((piece, index) => {
+          const [x, y, rotate] = starts[index];
+          setPosition(piece, x, y, rotate);
+        });
+      }
+
+      function moveAway(piece, pointerX, pointerY) {
+        const b = boundsFor(piece);
+        const current = piece.getBoundingClientRect();
+        const centerX = current.left + current.width / 2;
+        const centerY = current.top + current.height / 2;
+        const angleFromPointer = Math.atan2(centerY - pointerY, centerX - pointerX);
+        const distance = Math.min(scene.clientWidth, scene.clientHeight) * (reducedMotion ? 0.22 : 0.34);
+        const wiggle = (Math.random() - 0.5) * 1.4;
+        const angle = angleFromPointer + wiggle;
+
+        const nextX = clamp(centerX + Math.cos(angle) * distance, b.minX, b.maxX);
+        const nextY = clamp(centerY + Math.sin(angle) * distance, b.minY, b.maxY);
+        const rotate = clamp((Math.random() - 0.5) * 18, -10, 10);
+
+        setPosition(piece, nextX, nextY, rotate);
+      }
+
+      function finish() {
+        if (finished) return;
+        finished = true;
+
+        pieces.forEach((piece, index) => {
+          piece.classList.add("caught");
+          piece.style.opacity = "0";
+          setTimeout(() => {
+            piece.hidden = true;
+          }, 300);
+        });
+
+        final.setAttribute("aria-hidden", "false");
+        requestAnimationFrame(() => {
+          final.classList.add("is-visible");
+        });
+
+        burstHearts();
+        setTimeout(burstHearts, 450);
+      }
+
+      function burstHearts() {
+        const count = reducedMotion ? 8 : 18;
+
+        for (let i = 0; i < count; i += 1) {
+          const heart = document.createElement("span");
+          const size = 9 + Math.random() * 13;
+          heart.className = "heart";
+          heart.style.width = `${size}px`;
+          heart.style.height = `${size}px`;
+          heart.style.left = `${28 + Math.random() * 44}%`;
+          heart.style.bottom = `${12 + Math.random() * 19}%`;
+          heart.style.color = palette[i % palette.length];
+          heart.style.setProperty("--drift", `${(Math.random() - 0.5) * 120}px`);
+          heart.style.animationDelay = `${Math.random() * 240}ms`;
+          scene.appendChild(heart);
+          heart.addEventListener("animationend", () => heart.remove(), { once: true });
+        }
+      }
+
+      pieces.forEach((piece) => {
+        piece.addEventListener("pointerdown", (event) => {
+          event.preventDefault();
+
+          if (finished) return;
+          attempts += 1;
+
+          if (attempts >= maxEscapes) {
+            finish();
+            return;
+          }
+
+          moveAway(piece, event.clientX, event.clientY);
+
+          if (attempts > 2 && attempts % 2 === 0) {
+            const otherPieces = pieces.filter((item) => item !== piece);
+            const other = otherPieces[Math.floor(Math.random() * otherPieces.length)];
+            moveAway(other, event.clientX, event.clientY);
+          }
+        });
+      });
+
+      window.addEventListener("resize", scatterInitial);
+      scatterInitial();
+    })();
+  </script>
+</body>
+</html>
